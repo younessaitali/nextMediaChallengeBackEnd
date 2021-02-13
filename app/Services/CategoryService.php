@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\CategoryRepository;
-
+use Illuminate\Support\Arr;
 
 class CategoryService
 {
@@ -29,4 +29,13 @@ class CategoryService
         return  $this->categoryRepository->save($categoryData);
     }
 
+    public function getCategoryIdByName($name)
+    {
+        return $this->categoryRepository->getCategoryIdByName($name)->id;
+    }
+
+    public function getCategoriesNames()
+    {
+        return Arr::flatten($this->categoryRepository->getCategoriesNames()->toArray());
+    }
 }

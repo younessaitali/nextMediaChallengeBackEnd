@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Services\ProductService;
+use App\Services\CategoryService;
 
 
 class createProduct extends Command
@@ -27,16 +28,23 @@ class createProduct extends Command
      */
     protected $productService;
 
+    /**
+     * @var categoryService
+     */
+    protected $categoryService;
+
+
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(ProductService $productService)
+    public function __construct(ProductService $productService, CategoryService $categoryService)
     {
         parent::__construct();
         $this->productService = $productService;
+        $this->categoryService = $categoryService;
     }
 
     /**
@@ -52,18 +60,25 @@ class createProduct extends Command
         $price = $this->ask('give your product a price?');
         $path =  $this->ask('path of image?');
 
+        $categoryName = $this->choice(
+            'What is your product category?',
+            $this->categoryService->getCategoriesNames()
+        );
 
+        $categoryID
+            = $this->categoryService->getCategoryIdByName($categoryName);
 
-        try {
-            $this->productService->storeProductDataCLI([
-                'name' => $name,
-                'description' => $description,
-                'price' => $price,
-                'path' => $path
-            ]);
-            $this->line('Product saved successfully ');
-        } catch (\Throwable $th) {
-            $this->error('Something went wrong!');
-        }
+        // try {
+        $this->productService->storeProductDataCLI([
+            'name' => $name,
+            'description' => $description,
+            'price' => $price,
+            'path' => $path,
+            'categoryID' => $categoryID
+        ]);
+        $this->line('Product saved successfully ');
+        // } catch (\Throwable $th) {
+        //     $this->error('Something went wrong!');
+        // }
     }
 }

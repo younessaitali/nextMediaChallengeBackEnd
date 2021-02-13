@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\ProductRepository;
+use App\Services\CategoryProductService;
 
 
 class ProductService
@@ -12,16 +13,19 @@ class ProductService
      * @var $productRepository
      */
     protected $productRepository;
+    protected $categoryProductService;
 
     /**
      * ProductService Constructor
      *
      * @param ProductRepository  $productRepository
+     * @param CategoryProductService  $categoryProductService
      */
 
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductRepository $productRepository, CategoryProductService $categoryProductService)
     {
         $this->productRepository = $productRepository;
+        $this->categoryProductService = $categoryProductService;
     }
 
     /**
@@ -36,7 +40,15 @@ class ProductService
             'price' => $productData->price,
             'image' => $this->saveProductImage($productData->image)
         ];
-        return  $this->productRepository->save($data);
+
+        $product = $this->productRepository->save($data);
+        $this->categoryProductService->storeCategoryProductData(
+            [
+                'category_id' => $productData->categoryID,
+                'product_id' => $product->id
+            ]
+        );
+        return  $product;
     }
 
     /**
@@ -63,7 +75,17 @@ class ProductService
             'price' => $productData['price'],
             'image' => str_replace("./storage/app/", "", $newFilePath)
         ];
-        return  $this->productRepository->save($data);
+
+
+        $product = $this->productRepository->save($data);
+
+        $this->categoryProductService->storeCategoryProductData(
+            [
+                'category_id' => $productData['categoryID'],
+                'product_id' => $product->id
+            ]
+        );
+        return  $product;
     }
 
 

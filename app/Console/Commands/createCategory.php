@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Repositories\CategoryRepository;
+
 use Illuminate\Console\Command;
 use App\Services\CategoryService;
-use Illuminate\Support\Arr;
+
 
 
 class createCategory extends Command
@@ -30,21 +30,16 @@ class createCategory extends Command
     protected $categoryService;
 
 
-    /**
-     * @var categoryRepository
-     */
-    protected $categoryRepository;
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(CategoryService $categoryService, CategoryRepository $categoryRepository)
+    public function __construct(CategoryService $categoryService)
     {
         parent::__construct();
         $this->categoryService = $categoryService;
-        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -65,10 +60,10 @@ class createCategory extends Command
         if ($this->confirm('is it subCategory?')) {
             $categoryName = $this->choice(
                 'What is it?',
-                Arr::flatten($this->categoryRepository->getCategoriesNames()->toArray())
+                $this->categoryService->getCategoriesNames()
             );
             $parentCategory
-                = $this->categoryRepository->getCategoryIdByName($categoryName)->id;
+                = $this->categoryService->getCategoryIdByName($categoryName);
         }
 
 
