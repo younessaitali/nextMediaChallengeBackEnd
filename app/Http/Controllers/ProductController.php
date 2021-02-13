@@ -33,9 +33,10 @@ class ProductController extends ApiResponseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return newGuid();
+        // dd($request);
+        return $this->productService->getProducts($request);
     }
 
     /**

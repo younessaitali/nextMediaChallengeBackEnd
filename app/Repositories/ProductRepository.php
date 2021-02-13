@@ -43,4 +43,24 @@ class ProductRepository
 
         return $product->fresh();
     }
+
+    public function getProducts()
+    {
+        return $this->product;
+    }
+
+    public function getProductSortedBy($query, $sortedBy = "created_at", $orderBy = "desc")
+    {
+        return $query->orderBy($sortedBy, $orderBy);
+    }
+
+
+
+    public function getProductByCategory($query, $categoryId)
+    {
+        return $query->with('categories')
+            ->whereHas('categories', function ($query) use ($categoryId) {
+                $query->where('id', '=', $categoryId);
+            });
+    }
 }

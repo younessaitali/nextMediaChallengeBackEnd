@@ -88,6 +88,22 @@ class ProductService
         return  $product;
     }
 
+    public function getProducts($request)
+    {
+
+        $product = $this->productRepository->getProducts();
+
+        if ($request->has('sortedBy'))
+            $product = $this->productRepository->getProductSortedBy($product, $request->sortedBy);
+
+
+        if ($request->has('categoryID'))
+            $product = $this->productRepository->getProductByCategory($product, $request->categoryID);
+
+
+
+        return $product->paginate(15);
+    }
 
     /**
      * this function handle storing files and also if we wanna resize or manipulate images before saving them
@@ -97,7 +113,6 @@ class ProductService
      */
     public function saveProductImage($imageData)
     {
-
         return $imageData->store('products');
     }
 }
