@@ -228,5 +228,5 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-
+    'app_path' => env('APP_PATH', '/var/www/nextMediaChallengeBackEnd')
 ];
