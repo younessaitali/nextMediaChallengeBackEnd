@@ -26,7 +26,7 @@ class CategoryService
 
     public function storeCategoryData($categoryData)
     {
-
         return  $this->categoryRepository->save($categoryData);
     }
+
 }
