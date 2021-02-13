@@ -60,7 +60,7 @@ class ProductRepository
     {
         return $query->with('categories')
             ->whereHas('categories', function ($query) use ($categoryId) {
-                $query->where('id', '=', $categoryId);
+                $query->where('category_id', '=', $categoryId);
             });
     }
 }

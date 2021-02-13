@@ -35,8 +35,14 @@ class ProductController extends ApiResponseController
      */
     public function index(Request $request)
     {
-        // dd($request);
-        return $this->productService->getProducts($request);
+
+        $product = $this->productService->getProducts($request);
+
+        return $this->respond([
+            'data' =>  ProductResource::collection($product),
+            'messages' => 'Product created successfully',
+            'status' => "ok"
+        ]);
     }
 
     /**
