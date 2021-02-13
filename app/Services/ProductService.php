@@ -24,6 +24,10 @@ class ProductService
         $this->productRepository = $productRepository;
     }
 
+    /**
+     * store product data to data base form api call or web
+     */
+
     public function storeProductData($productData)
     {
         $data = [
@@ -31,6 +35,33 @@ class ProductService
             'description' => $productData->description,
             'price' => $productData->price,
             'image' => $this->saveProductImage($productData->image)
+        ];
+        return  $this->productRepository->save($data);
+    }
+
+    /**
+     * store product data from command line
+     */
+
+    public function storeProductDataCLI($productData)
+    {
+
+        $oldPath = $productData['path'];
+
+        $newFileName = newGuid();
+
+        $fileExtension = \File::extension($oldPath);
+
+        $newFilePath = "./storage/app/products/$newFileName.$fileExtension";
+
+
+        exec("cp $oldPath $newFilePath");
+
+        $data = [
+            'name' => $productData['name'],
+            'description' => $productData['description'],
+            'price' => $productData['price'],
+            'image' => str_replace("./storage/app/", "", $newFilePath)
         ];
         return  $this->productRepository->save($data);
     }

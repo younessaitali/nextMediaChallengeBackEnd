@@ -35,7 +35,7 @@ class ProductController extends ApiResponseController
      */
     public function index()
     {
-        return 'hello';
+        return newGuid();
     }
 
     /**
